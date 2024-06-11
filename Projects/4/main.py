@@ -3,6 +3,10 @@ import time
 import random
 
 start_Button = Pin(14, Pin.IN, Pin.PULL_UP)
+buttonR = Pin(16, Pin.IN, Pin.PULL_UP)
+buttonG = Pin(21, Pin.IN, Pin.PULL_UP)
+buttonY = Pin(22, Pin.IN, Pin.PULL_UP) 
+
 ledR = Pin(15, Pin.OUT)
 ledG = Pin(11, Pin.OUT)
 ledY = Pin(8, Pin.OUT)
@@ -60,10 +64,25 @@ def Waves():
     state = "player_move"
     
 def Move():
-    global state, seq, i
+    global state, seq
     
-    if start_Button.value() == 0:
-        state = "waves"        
+    for i in seq:
+        while buttonR.value() == 1 and buttonG.value() == 1 and buttonY.value() == 1:
+            pass
+            
+        if (i == "R" and buttonR.value() == 0) or (i == "G" and buttonG.value() == 0) or (i == "Y" and buttonY.value() == 0):
+            print("move")
+            time.sleep(1)
+            state = "waves"
+        else:
+            print("yousuck")
+            state = "youSuck"
+            break
+        
+def GameOver():
+    global state
+    print("gameover")
+    state = "wait"
     
 
 while True:
@@ -75,4 +94,5 @@ while True:
         Waves()
     elif state == "player_move":
         Move()
-        
+    elif state == "youSuck":
+        GameOver()
